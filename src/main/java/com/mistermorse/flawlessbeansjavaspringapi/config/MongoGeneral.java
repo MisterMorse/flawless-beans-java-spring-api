@@ -1,36 +1,44 @@
 package com.mistermorse.flawlessbeansjavaspringapi.config;
 
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.lang.NonNull;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
+import static java.util.Collections.singletonList;
 
 @Configuration
 public class MongoGeneral extends AbstractMongoClientConfiguration {
 
-//    @Value("${spring.data.mongodb.username}")
-//    private String username;
-//
-//    @Value("${spring.data.mongodb.password}")
-//    private String password;
-//
-//    @Value("${spring.data.mongodb.database}")
-//    private String database;
+    private ApplicationContext applicationContext;
+    private MongoProperties mongoProperties;
 
-//    "mongodb+srv://matthewharp:JuUdw6ONZeExgB98@cluster0.2ahn6zq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    @Autowired
+    public MongoGeneral(MongoProperties mongoProperties) {
+        this.applicationContext = new AnnotationConfigApplicationContext();
+        this.mongoProperties = mongoProperties;
+    }
 
-    @NonNull
-    @Override
+//    @NonNull
     protected String getDatabaseName() {
-        return "flawless-beans";
+        System.out.println(getDatabaseName());
+        return mongoProperties.getDatabase();
     }
 
-    @Bean(name = "getSimpleMongoClient")
-    MongoClient getSimpleMongoClient() {
-        return MongoClients.create("mongodb+srv://matthewharp:JuUdw6ONZeExgB98@cluster0.2ahn6zq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-    }
+//    protected MongoClient cre
+
+//    protected void configureClientSettings(MongoClientSettings.Builder builder) {
+//        builder
+//                .credential(MongoCredential.createCredential(mongoProperties.getUsername(), getDatabaseName(), mongoProperties.getPassword().toCharArray()))
+//                .applyToClusterSettings(settings -> {
+//                    settings.hosts(singletonList(new ServerAddress("mongodb+srv://matthewharp:8yrHYLCGoLdLtuIq@cluster0.2ahn6zq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")));
+//                });
+//    }
 
 }
